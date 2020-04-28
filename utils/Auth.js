@@ -9,7 +9,8 @@ const userRegister = async (userData, role, res) => {
     let userTaken = await validateEmail(userData.email);
     if (userTaken) {
       return res.status(400).json({
-        message: `Email is already registered`,
+        email: "Email is already registered",
+        message: "Registration failure",
         success: false,
       });
     }
@@ -18,17 +19,17 @@ const userRegister = async (userData, role, res) => {
     const newUser = new User({
       ...userData,
       password: hashedPassword,
+      role,
     });
 
     await newUser.save();
     return res.status(201).json({
-      message: `Account successfully created`,
+      message: "Account successfully created",
       success: true,
     });
   } catch (err) {
-    console.log(err);
     return res.status(500).json({
-      message: `Unable to create user account`,
+      message: "Unable to create user account",
       success: false,
     });
   }
@@ -48,14 +49,15 @@ const userLogin = async (userCreds, role, res) => {
   const user = await User.findOne({ email });
   if (!user) {
     return res.status(404).json({
-      message: `This email number is not registered, invalid login`,
+      message: "Failed login attempt",
+      email: "Incorrect email address",
       success: false,
     });
   }
 
   if (user.role != role) {
     return res.status(403).json({
-      message: `Please make sure you are login in from the right portal`,
+      message: "Please make sure you are login in from the right portal",
       success: false,
     });
   }
@@ -86,12 +88,13 @@ const userLogin = async (userCreds, role, res) => {
     };
     return res.status(200).json({
       ...result,
-      message: `Login success`,
+      message: "Login success",
       success: true,
     });
   } else {
     return res.status(403).json({
-      message: `Incorrect password`,
+      message: "Failed login attempt",
+      password: "Incorrect password",
       success: false,
     });
   }
