@@ -3,14 +3,14 @@ const { ensureAuthenticated, ensureAuthorized } = require("../../utils/Auth");
 const {
   validationRules,
   validate,
-} = require("../../validations/articleValidator");
+} = require("../../validations/videoValidator");
 const {
   create,
   getAll,
   getOne,
   updateOne,
   deleteOne,
-} = require("../../controllers/articlesController");
+} = require("../../controllers/videosController");
 
 router.post(
   "/",

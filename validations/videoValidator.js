@@ -2,21 +2,15 @@ const { check, validationResult } = require("express-validator");
 
 const validationRules = () => {
   return [
-    check("category")
-      .isLength({ min: 2 })
-      .withMessage("Category must be at least 2 characters long."),
+    check("videoId")
+      .isLength({ min: 4 })
+      .withMessage("Video Id must be at least 4 characters long."),
     check("title")
       .isLength({ min: 2 })
       .withMessage("Title must be at least 2 characters long."),
     check("body")
       .isLength({ min: 12 })
       .withMessage("Body must be at least 12 characters long."),
-    check("imageUrl")
-      .isLength({ min: 10 })
-      .withMessage("Image Url must be at least 10 characters long."),
-    check("postUrl")
-      .isLength({ min: 10 })
-      .withMessage("Post Url must be at least 10 characters long."),
   ];
 };
 

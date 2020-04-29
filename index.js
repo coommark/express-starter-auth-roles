@@ -26,6 +26,8 @@ app.use("/api/super", require("./routes/admin/super"));
 
 //posts
 app.use("/api/articles", require("./routes/posts/articles"));
+app.use("/api/videos", require("./routes/posts/videos"));
+app.use("/api/specials", require("./routes/posts/specials"));
 
 const startApp = async () => {
   try {

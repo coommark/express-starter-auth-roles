@@ -1,8 +1,8 @@
 const paginate = require("express-paginate");
-const Article = require("../models/posts/Article");
+const Special = require("../models/posts/Special");
 
 const create = async (req, res) => {
-  const newRecord = new Article({
+  const newRecord = new Special({
     ...req.body,
     postedBy: req.user._id,
   });
@@ -10,12 +10,12 @@ const create = async (req, res) => {
   try {
     await newRecord.save();
     return res.status(201).json({
-      message: "Aricle successfully created",
+      message: "Item successfully created",
       success: true,
     });
   } catch (err) {
     return res.status(500).json({
-      message: "Unable to create article",
+      message: "Unable to create item",
       success: false,
     });
   }
@@ -24,13 +24,13 @@ const create = async (req, res) => {
 const getAll = async (req, res) => {
   try {
     const [results, itemCount] = await Promise.all([
-      Article.find({}, "-body")
+      Special.find({})
         .sort({ createdAt: -1 })
         .limit(req.query.limit)
         .skip(req.skip)
         .lean()
         .exec(),
-      Article.count({}),
+      Special.count({}),
     ]);
 
     const pageCount = Math.ceil(itemCount / req.query.limit);
@@ -44,7 +44,7 @@ const getAll = async (req, res) => {
     });
   } catch (err) {
     return res.status(500).json({
-      message: "Unable to fetch articles",
+      message: "Unable to fetch items",
       success: false,
     });
   }
@@ -52,14 +52,12 @@ const getAll = async (req, res) => {
 
 const getOne = async (req, res) => {
   try {
-    //const item = await Article.findOne({ _id: req.params.id });
-    const item = await Article.findByIdAndUpdate(req.params.id, {
+    //const item = await Special.findOne({ _id: req.params.id });
+    const item = await Special.findByIdAndUpdate(req.params.id, {
       $inc: { viewsCount: 1 },
     });
-
     if (item) {
-      console.log(item);
-      return res.status(200).json(item);
+      return res.status(201).json(item);
     }
     return res.status(404).json({
       message: "No item found",
@@ -75,7 +73,7 @@ const getOne = async (req, res) => {
 
 const updateOne = async (req, res) => {
   try {
-    await Article.findByIdAndUpdate(req.params.id, req.body);
+    await Special.findByIdAndUpdate(req.params.id, req.body);
     return res.status(201).json({
       message: "Item successfully updated",
       success: true,
@@ -90,7 +88,7 @@ const updateOne = async (req, res) => {
 
 const deleteOne = async (req, res) => {
   try {
-    const deleted = await Article.findByIdAndDelete(req.params.id);
+    const deleted = await Special.findByIdAndDelete(req.params.id);
 
     if (!deleted) {
       return res.status(404).json({

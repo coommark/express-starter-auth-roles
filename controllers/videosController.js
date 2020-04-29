@@ -1,8 +1,8 @@
 const paginate = require("express-paginate");
-const Article = require("../models/posts/Article");
+const Video = require("../models/posts/Video");
 
 const create = async (req, res) => {
-  const newRecord = new Article({
+  const newRecord = new Video({
     ...req.body,
     postedBy: req.user._id,
   });
@@ -10,12 +10,12 @@ const create = async (req, res) => {
   try {
     await newRecord.save();
     return res.status(201).json({
-      message: "Aricle successfully created",
+      message: "Video successfully created",
       success: true,
     });
   } catch (err) {
     return res.status(500).json({
-      message: "Unable to create article",
+      message: "Unable to create video",
       success: false,
     });
   }
@@ -24,13 +24,13 @@ const create = async (req, res) => {
 const getAll = async (req, res) => {
   try {
     const [results, itemCount] = await Promise.all([
-      Article.find({}, "-body")
+      Video.find({})
         .sort({ createdAt: -1 })
         .limit(req.query.limit)
         .skip(req.skip)
         .lean()
         .exec(),
-      Article.count({}),
+      Video.count({}),
     ]);
 
     const pageCount = Math.ceil(itemCount / req.query.limit);
@@ -44,7 +44,7 @@ const getAll = async (req, res) => {
     });
   } catch (err) {
     return res.status(500).json({
-      message: "Unable to fetch articles",
+      message: "Unable to fetch videos",
       success: false,
     });
   }
@@ -52,14 +52,11 @@ const getAll = async (req, res) => {
 
 const getOne = async (req, res) => {
   try {
-    //const item = await Article.findOne({ _id: req.params.id });
-    const item = await Article.findByIdAndUpdate(req.params.id, {
+    const item = await Video.findByIdAndUpdate(req.params.id, {
       $inc: { viewsCount: 1 },
     });
-
     if (item) {
-      console.log(item);
-      return res.status(200).json(item);
+      return res.status(201).json(item);
     }
     return res.status(404).json({
       message: "No item found",
@@ -75,7 +72,7 @@ const getOne = async (req, res) => {
 
 const updateOne = async (req, res) => {
   try {
-    await Article.findByIdAndUpdate(req.params.id, req.body);
+    await Video.findByIdAndUpdate(req.params.id, req.body);
     return res.status(201).json({
       message: "Item successfully updated",
       success: true,
@@ -90,7 +87,7 @@ const updateOne = async (req, res) => {
 
 const deleteOne = async (req, res) => {
   try {
-    const deleted = await Article.findByIdAndDelete(req.params.id);
+    const deleted = await Video.findByIdAndDelete(req.params.id);
 
     if (!deleted) {
       return res.status(404).json({

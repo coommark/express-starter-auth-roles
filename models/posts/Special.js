@@ -1,11 +1,7 @@
 const { Schema, model } = require("mongoose");
 
-const ArticleSchema = new Schema(
+const SpecialsSchema = new Schema(
   {
-    category: {
-      type: String,
-      required: true,
-    },
     title: {
       type: String,
       required: true,
@@ -22,8 +18,20 @@ const ArticleSchema = new Schema(
       type: String,
       required: true,
     },
+    postedBy: {
+      type: Schema.Types.ObjectId,
+      ref: "User",
+    },
+    updatedBy: {
+      type: Schema.Types.ObjectId,
+      ref: "User",
+    },
+    viewsCount: {
+      type: Number,
+      default: 0,
+    },
   },
   { timestamps: true }
 );
 
-module.exports = model("articles", ArticleSchema);
+module.exports = model("specials", SpecialsSchema);

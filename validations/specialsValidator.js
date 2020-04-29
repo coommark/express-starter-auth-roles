@@ -2,9 +2,6 @@ const { check, validationResult } = require("express-validator");
 
 const validationRules = () => {
   return [
-    check("category")
-      .isLength({ min: 2 })
-      .withMessage("Category must be at least 2 characters long."),
     check("title")
       .isLength({ min: 2 })
       .withMessage("Title must be at least 2 characters long."),
