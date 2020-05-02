@@ -23,6 +23,7 @@ const create = async (req, res) => {
 
 const getAll = async (req, res) => {
   try {
+    console.log(req.query);
     const [results, itemCount] = await Promise.all([
       Article.find({}, "-body")
         .sort({ createdAt: -1 })
@@ -40,6 +41,7 @@ const getAll = async (req, res) => {
       data: results,
       pageCount,
       itemCount,
+      currentPage: req.query.page,
       pages: paginate.getArrayPages(req)(3, pageCount, req.query.page),
     });
   } catch (err) {
