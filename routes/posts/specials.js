@@ -1,3 +1,5 @@
+const path = require("path");
+const multer = require("multer");
 const router = require("express").Router();
 const { ensureAuthenticated, ensureAuthorized } = require("../../utils/Auth");
 const {
@@ -11,6 +13,32 @@ const {
   updateOne,
   deleteOne,
 } = require("../../controllers/specialsController");
+const PATH = "../../public/";
+
+//File upload
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, path.join(__dirname, PATH));
+  },
+  filename: (req, file, cb) => {
+    console.log("IN SAVE IMAGE");
+    console.log(file);
+    const fileName = Date.now() + path.extname(file.originalname);
+    req.body.imageUrl = fileName;
+    cb(null, fileName);
+  },
+});
+
+const upload = multer({
+  storage: storage,
+});
+
+router.post(
+  "/",
+  ensureAuthenticated,
+  ensureAuthorized(["admin"]),
+  upload.any("files")
+);
 
 router.post(
   "/",

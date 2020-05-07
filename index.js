@@ -1,6 +1,7 @@
 const cors = require("cors");
-const exp = require("express");
-const bp = require("body-parser");
+const express = require("express");
+//const fileUpload = require("express-fileupload");
+const bodyParser = require("body-parser");
 const paginate = require("express-paginate");
 const passport = require("passport");
 const { success, error } = require("consola");
@@ -8,11 +9,23 @@ const { connect } = require("mongoose");
 
 const { DB, PORT } = require("./config");
 
-const app = exp();
+const app = express();
 
 app.use(cors());
-app.use(bp.json());
+app.use(
+  bodyParser.urlencoded({
+    extended: false,
+  })
+);
+app.use(bodyParser.json());
+//app.use(express.urlencoded({ extended: false }));
+
+/* bodyParser = {
+  json: { limit: "50mb", extended: true },
+  urlencoded: { limit: "50mb", extended: true },
+}; */
 app.use(passport.initialize());
+app.use(express.static(__dirname));
 
 require("./middlewares/passport")(passport);
 

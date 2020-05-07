@@ -40,6 +40,7 @@ const getAll = async (req, res) => {
       data: results,
       pageCount,
       itemCount,
+      currentPage: req.query.page,
       pages: paginate.getArrayPages(req)(3, pageCount, req.query.page),
     });
   } catch (err) {

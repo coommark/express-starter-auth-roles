@@ -2,6 +2,7 @@ const paginate = require("express-paginate");
 const Special = require("../models/posts/Special");
 
 const create = async (req, res) => {
+  console.log(req.body);
   const newRecord = new Special({
     ...req.body,
     postedBy: req.user._id,
@@ -40,6 +41,7 @@ const getAll = async (req, res) => {
       data: results,
       pageCount,
       itemCount,
+      currentPage: req.query.page,
       pages: paginate.getArrayPages(req)(3, pageCount, req.query.page),
     });
   } catch (err) {
